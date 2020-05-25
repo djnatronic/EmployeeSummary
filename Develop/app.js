@@ -34,35 +34,181 @@ const render = require("./lib/htmlRenderer");
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
 
-inquirer
-  .prompt([
-    {
-      type: 'list',
-        name: 'type',
-        message: 'What type of employee is this person?',
-        choices: ['Engineer', 'Intern', 'Manager'],
-    },
-    {
+
+
+numberArray = []
+teamArray = []
+var id = 100
+
+const setupQuestions = [
+  {
       type: "input",
-      message: "Please type the employees name?",
-      name: "name"
-    },
-    {
+      name: "numberManager",
+      message: "How many managers would you like to enter?",
+  },
+  {
       type: "input",
-      message: "Enter Employee ID",
-      name: "id"
+      name: "numberIntern",
+      message: "How many interns would you like to enter?",
+  },
+  {
+      type: "input",
+      name: "numberEngineer",
+      message: "How many engineers would you like to enter?"
+  }
+  
+  ]
+
+const managerQuestion = [
+  {
+      type: "input",
+      name: "name",
+      message: "Enter the manager's name:",
+  },
+  {
+      type: "input",
+      name: "email",
+      message: "Enter the manager's email:",
+  },
+  {
+      type: "input",
+      name: "officeNumber",
+      message: "What's manager's office number:"
+  }
+  
+  ]
+
+  const internQuestion = [
+    {
+        type: "input",
+        name: "name",
+        message: "Enter the intern's name:",
     },
     {
         type: "input",
-        message: "Enter employee email",
-        name: "email"
+        name: "email",
+        message: "Enter the intern's email:",
+    },
+    {
+        type: "input",
+        name: "school",
+        message: "What school do you currently attend?"
+    }
+    
+
+    ]
+    const engineerQuestion = [
+      {
+          type: "input",
+          name: "name",
+          message: "Enter the engineer's name:",
+      },
+      {
+          type: "input",
+          name: "email",
+          message: "Enter the engineer's email:",
+      },
+      {
+          type: "input",
+          name: "github",
+          message: "What is your Gighub account name?"
       }
       
-  ])
-  .then(function(response) {
+      ]
 
-    console.log(response)
 
+async function start(){
+  console.log('\r\n')
+  console.log("****************************************")
+  console.log("*********Team Generator*****************")
+  console.log("****************************************")
+  const nathan = await inquirer.prompt(setupQuestions).then(response => {
+  //let manager = new Manager(response.name,9674,response.email, response.officeNumber);
+  //teamArray.push(manager);
+  //console.log(response)
+  numberArray = response
+}
+
+)}; 
+
+
+
+async function getManager(){
+ const nathan = await inquirer.prompt(managerQuestion).then(response => {
+      let manager = new Manager(response.name,id++,response.email, response.school);
+      teamArray.push(manager);
+      
+  }
+
+  )}; 
+
+async function getIntern(){
+  const nathan = await inquirer.prompt(internQuestion).then(response => {
+        let intern = new Intern(response.name,id++,response.email, response.officeNumber);
+        teamArray.push(intern);
+        
+  }
+  
+)}; 
+ 
+async function getEngineer(){
+  const nathan = await inquirer.prompt(engineerQuestion).then(response => {
+        let engineer = new Engineer(response.name,id++,response.email, response.github);
+        teamArray.push(engineer);
+      
+  }
+  
+)}; 
+
+  async function getEmployees() {
+     await start()
+     
+    for (var i=0; i < numberArray.numberManager; i++) {
+      console.log('\r\n')
+      console.log("****************************************")
+      console.log("***********Enter Manager****************")
+      console.log("****************************************")
+      await getManager();
+
+    }
+
+    for (var i=0; i < numberArray.numberIntern; i++) {
+      console.log('\r\n')
+      console.log("****************************************")
+      console.log("************Enter Intern****************")
+      console.log("****************************************")
+      await getIntern();
+
+    }
+
+    for (var i=0; i < numberArray.numberEngineer; i++) {
+      console.log('\r\n')
+      console.log("****************************************")
+      console.log("************Enter Engineer**************")
+      console.log("****************************************")
+      await getEngineer();
+
+    }
+
+
+
+
+    
+
+  var renderedTeam =  render(teamArray)
+
+  console.log(renderedTeam)
+
+  fs.appendFile('myteam.html', renderedTeam, function (err) {
+    if (err) throw err;
+    console.log('Saved!');
   });
 
-  const test = new Employee(25, 25);
+    console.log('Done!');
+  }
+
+  getEmployees()
+
+
+
+  
